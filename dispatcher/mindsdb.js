@@ -1,6 +1,8 @@
 const MindsDBCloud = require("mindsdb-js-sdk").default;
 
-const languageModel = process.env.MINDSDB_LANGUAGE_TRANSLATION_MODEL_NAME;
+const languageEnglishToFrench = process.env.MINDSDB_LANGUAGE_TRANSLATION_ENGLISH_FRENCH;
+const languageFrenchToEnglish = process.env.MINDSDB_LANGUAGE_TRANSLATION_FRENCH_ENGLISH;
+const languageSpanishToEnglish = process.env.MINDSDB_LANGUAGE_TRANSLATION_SPANISH_ENGLISH;
 
 async function connectToMindsDBCloud() {
   try {
@@ -18,11 +20,11 @@ async function connectToMindsDBCloud() {
 
    // Endpoint for Language Translation
 
-   async function analyzeLanguageTranslation(message) {
+   async function analyzeLanguageEngToFreTranslation(message, language) {
     let retries = 3; // Maximum number of retries
     while (retries > 0) {
       try {
-        const text = `SELECT * FROM ${languageModel} WHERE text='${message}'`;
+        const text = `SELECT * FROM ${languageEnglishToFrench} WHERE text='${message}'`;
         console.log("test---->",text)
         const LanguageTranslationResponse = await MindsDBCloud.SQL.runQuery(text);
         console.log("response--->",LanguageTranslationResponse)
@@ -32,7 +34,55 @@ async function connectToMindsDBCloud() {
           return LanguageTranslationResponse;
         
       } catch (error) {
-        console.log("Error detecting Question and Answer:", error);
+        console.log("Error detecting Language Transaltion:", error);
+        retries--;
+        if (retries === 0) {
+            throw new Error("Maximum number of retries reached");
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second before retrying
+      }
+    }
+  }
+
+  async function analyzeLanguageFreToEngTranslation(message) {
+    let retries = 3; // Maximum number of retries
+    while (retries > 0) {
+      try {
+        const text = `SELECT * FROM ${languageFrenchToEnglish} WHERE text='${message}'`;
+        console.log("test---->",text)
+        const LanguageTranslationResponse = await MindsDBCloud.SQL.runQuery(text);
+        console.log("response--->",LanguageTranslationResponse)
+        if (!LanguageTranslationResponse.rows) {
+          throw new Error("Invalid response from MindsDB");
+        }
+          return LanguageTranslationResponse;
+        
+      } catch (error) {
+        console.log("Error detecting Language Transaltion:", error);
+        retries--;
+        if (retries === 0) {
+            throw new Error("Maximum number of retries reached");
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second before retrying
+      }
+    }
+  }
+
+  async function analyzeLanguageSpaToEngTranslation(message) {
+    let retries = 3; // Maximum number of retries
+    while (retries > 0) {
+      try {
+        const text = `SELECT * FROM ${languageSpanishToEnglish} WHERE text='${message}'`;
+        console.log("test---->",text)
+        const LanguageTranslationResponse = await MindsDBCloud.SQL.runQuery(text);
+        console.log("response--->",LanguageTranslationResponse)
+        if (!LanguageTranslationResponse.rows) {
+          throw new Error("Invalid response from MindsDB");
+        }
+          return LanguageTranslationResponse;
+        
+      } catch (error) {
+        console.log("Error detecting Language Transaltion:", error);
         retries--;
         if (retries === 0) {
             throw new Error("Maximum number of retries reached");
@@ -43,5 +93,5 @@ async function connectToMindsDBCloud() {
   }
 
   
-  module.exports = { connectToMindsDBCloud,analyzeLanguageTranslation};
+  module.exports = { connectToMindsDBCloud,analyzeLanguageEngToFreTranslation,analyzeLanguageFreToEngTranslation,analyzeLanguageSpaToEngTranslation};
   

@@ -4,7 +4,7 @@ const app = express();
 const Discord = require('discord.js');
 const bodyParser = require("body-parser");
 
-const { connectToMindsDBCloud,analyzeLanguageTranslation } = require("./dispatcher/mindsdb.js")
+const { connectToMindsDBCloud,analyzeLanguageEngToFreTranslation,analyzeLanguageFreToEngTranslation, analyzeLanguageSpaToEngTranslation} = require("./dispatcher/mindsdb.js")
 
 
 const client = new Discord.Client({ intents: [
@@ -29,15 +29,31 @@ client.on('ready', () => {
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  if (message.content.startsWith('!search')) {
-    const query = message.content.slice(7).trim();
+  if (message.content.startsWith('!EnglishToFrench')) {
+    const query = message.content.slice(16).trim();
     await connectToMindsDBCloud();
-    const response = await analyzeLanguageTranslation(query);    
+    const response = await analyzeLanguageEngToFreTranslation(query);    
 
     console.log("result----->",response);
  
     message.reply(JSON.stringify(response.rows[0]));
-  }
+  } else if (message.content.startsWith('!FrenchToEnglish')) {
+    const query = message.content.slice(16).trim();
+    await connectToMindsDBCloud();
+    const response = await analyzeLanguageFreToEngTranslation(query);    
+
+    console.log("result----->",response);
+ 
+    message.reply(JSON.stringify(response.rows[0]));
+  } else if (message.content.startsWith('!SpanishToEnglish')) {
+    const query = message.content.slice(17).trim();
+    await connectToMindsDBCloud();
+    const response = await analyzeLanguageSpaToEngTranslation(query);    
+
+    console.log("result----->",response);
+ 
+    message.reply(JSON.stringify(response.rows[0]));
+  } 
 });
 
 client.login(process.env.TOKEN);
