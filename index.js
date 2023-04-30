@@ -36,15 +36,13 @@ client.on('messageCreate', async (message) => {
 
     console.log("result----->",response);
  
-    message.reply(JSON.stringify(response.rows[0]));
+    message.reply(JSON.stringify(response.rows[0].text));
   } else if (message.content.startsWith('!FrenchToEnglish')) {
     const query = message.content.slice(16).trim();
     await connectToMindsDBCloud();
     const response = await analyzeLanguageFreToEngTranslation(query);    
-
-    console.log("result----->",response);
  
-    message.reply(JSON.stringify(response.rows[0]));
+    message.reply(JSON.stringify(response.rows[0].english));
   } else if (message.content.startsWith('!SpanishToEnglish')) {
     const query = message.content.slice(17).trim();
     await connectToMindsDBCloud();
@@ -52,7 +50,7 @@ client.on('messageCreate', async (message) => {
 
     console.log("result----->",response);
  
-    message.reply(JSON.stringify(response.rows[0]));
+    message.reply(JSON.stringify(response.rows[0].english));
   } 
 });
 
