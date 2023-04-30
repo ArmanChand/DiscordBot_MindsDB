@@ -36,7 +36,7 @@ client.on('messageCreate', async (message) => {
 
     console.log("result----->",response);
  
-    message.reply(JSON.stringify(response.rows[0].text));
+    message.reply(JSON.stringify(response.rows[0].pred));
   } else if (message.content.startsWith('!FrenchToEnglish')) {
     const query = message.content.slice(16).trim();
     await connectToMindsDBCloud();
