@@ -29,7 +29,7 @@ client.on('ready', () => {
 client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
-  if (message.content.startsWith('!EnglishToFrench')) {
+  if (message.content.toLowerCase().startsWith('!englishtofrench')) {
     const query = message.content.slice(16).trim();
     await connectToMindsDBCloud();
     const response = await analyzeLanguageEngToFreTranslation(query);    
@@ -37,13 +37,13 @@ client.on('messageCreate', async (message) => {
     console.log("result----->",response);
  
     message.reply(JSON.stringify(response.rows[0].pred));
-  } else if (message.content.startsWith('!FrenchToEnglish')) {
+  } else if (message.content.toLowerCase().startsWith('!frenchtoenglish')) {
     const query = message.content.slice(16).trim();
     await connectToMindsDBCloud();
     const response = await analyzeLanguageFreToEngTranslation(query);    
  
     message.reply(JSON.stringify(response.rows[0].english));
-  } else if (message.content.startsWith('!SpanishToEnglish')) {
+  } else if (message.content.toLowerCase().startsWith('!spanishtoenglish')) {
     const query = message.content.slice(17).trim();
     await connectToMindsDBCloud();
     const response = await analyzeLanguageSpaToEngTranslation(query);    
